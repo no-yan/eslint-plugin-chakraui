@@ -1,5 +1,5 @@
 import { RuleTester } from "eslint";
-import rule from "./prefer-height";
+import rule from "./prefer-no-shorthand";
 const tester = new RuleTester({
   parser: require.resolve("@typescript-eslint/parser"),
   parserOptions: { ecmaFeatures: { jsx: true } },
@@ -9,6 +9,8 @@ tester.run("prefer-height", rule, {
   valid: [
     { code: "(props: Props) =><Box height='1'>hello</Box>" },
     { code: "(props: Props) =><Button height={1}>hello</Button>" },
+    { code: "(props: Props) =><Flex height={1}>hello</Flex>" },
+    { code: "(props: Props) =><NonChakra h={1}>hello</NonChakra>" },
   ],
   invalid: [
     {
