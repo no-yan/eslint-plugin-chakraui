@@ -1,5 +1,5 @@
 import { isChakraComponent } from "./../utils/isChakraComponent";
-import { Rule } from "eslint";
+import { Rule, SourceCode } from "eslint";
 import { Identifier, ImportDeclaration, Node } from "estree";
 import type { JSXOpeningElement, JSXAttribute } from "estree-jsx";
 import { updateImportedMap } from "../utils/updateImportedMap";
@@ -43,6 +43,33 @@ const sortProperties = (properties: JSXAttribute[]) => {
   return sorted;
 };
 
+const concatSortedText = (sorted: JSXAttribute[], unsorted: JSXAttribute[], sourceCode: SourceCode) => {
+  let sortedText = "";
+
+  let beforeNode = 0;
+  for (let i = 0; i < sorted.length; i++) {
+    const sortedAttr = sorted[i] as unknown as Node;
+
+    const isNewLine = unsorted[beforeNode].loc?.end.line !== unsorted[i].loc?.start.line;
+
+    if (isNewLine) {
+      sortedText += "\n";
+    }
+    sortedText += sourceCode.getText(sortedAttr);
+    // if (i !== sorted.length - 1) {
+
+    // }
+    if (i !== sorted.length - 1) {
+      sortedText += " ";
+    } else {
+      // TODO:  don't insert last space if <Box height='11' />
+    }
+
+    beforeNode = i === 0 ? 0 : beforeNode + 1;
+  }
+  return sortedText;
+};
+
 const rule: Rule.RuleModule = {
   meta: {
     fixable: "code",
@@ -65,27 +92,24 @@ const rule: Rule.RuleModule = {
         }
 
         const chakraElement = jsxElement as unknown as JSXOpeningElement;
-        const attributes = chakraElement.attributes as unknown as JSXAttribute[]; // TODO:check spread
-        const sorted = sortProperties(attributes);
+        const unsorted = chakraElement.attributes as unknown as JSXAttribute[]; // TODO:check spread
+        const sorted = sortProperties(unsorted);
 
         const sourceCode = context.getSourceCode();
 
-        let sortedText = "";
-        for (let i = 0; i < sorted.length; i++) {
-          const sortedAttr = sorted[i] as unknown as Node;
-          sortedText += sourceCode.getText(sortedAttr) + " ";
-        }
+        let sortedText = concatSortedText(sorted, unsorted, sourceCode);
 
         let shouldFix = false;
         for (let i = 0; i < sorted.length; i++) {
-          if (sorted[i].name.name !== attributes[0].name.name) {
+          if (sorted[i].name.name !== unsorted[0].name.name) {
             shouldFix = true;
             break;
           }
         }
+
         if (shouldFix) {
-          const nodeStart = attributes[0].range?.[0];
-          const nodeEnd = attributes[attributes.length - 1].range?.[1];
+          const nodeStart = unsorted[0].range?.[0];
+          const nodeEnd = unsorted[unsorted.length - 1].range?.[1];
           if (nodeStart === undefined || nodeEnd === undefined) {
             return;
           }
