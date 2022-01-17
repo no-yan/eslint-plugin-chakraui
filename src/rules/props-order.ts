@@ -46,26 +46,22 @@ const sortProperties = (properties: JSXAttribute[]) => {
 const concatSortedText = (sorted: JSXAttribute[], unsorted: JSXAttribute[], sourceCode: SourceCode) => {
   let sortedText = "";
 
-  let beforeNode = 0;
   for (let i = 0; i < sorted.length; i++) {
     const sortedAttr = sorted[i] as unknown as Node;
 
-    const isNewLine = unsorted[beforeNode].loc?.end.line !== unsorted[i].loc?.start.line;
-
-    if (isNewLine) {
-      sortedText += "\n";
-    }
     sortedText += sourceCode.getText(sortedAttr);
-    // if (i !== sorted.length - 1) {
 
-    // }
+    // add space or break line
     if (i !== sorted.length - 1) {
-      sortedText += " ";
-    } else {
-      // TODO:  don't insert last space if <Box height='11' />
-    }
+      const isNewLine = unsorted[i].loc?.end.line !== unsorted[i + 1].loc?.start.line;
 
-    beforeNode = i === 0 ? 0 : beforeNode + 1;
+      if (isNewLine) {
+        // this doesn't keep its spacing as it was.
+        sortedText += "\n";
+      } else {
+        sortedText += " ";
+      }
+    }
   }
   return sortedText;
 };
@@ -96,7 +92,6 @@ const rule: Rule.RuleModule = {
         const sorted = sortProperties(unsorted);
 
         const sourceCode = context.getSourceCode();
-
         let sortedText = concatSortedText(sorted, unsorted, sourceCode);
 
         let shouldFix = false;
