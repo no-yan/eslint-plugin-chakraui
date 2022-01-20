@@ -18,77 +18,77 @@ tester.run("props-order", rule, {
     {
       code: `
       import {Box} from '@chakra-ui/react';
-      const Ui = (props: Props) =><Box height={1} size={"md"} fontSize={"xl"} bg={"gray.200"}/>
+      const Ui = (props: Props) =><Box height={"1"} size={"md"} fontSize={"xl"} bg={"gray.200"}/>
       `,
       errors: [{ message: "invalid order" }],
       output: `
       import {Box} from '@chakra-ui/react';
-      const Ui = (props: Props) =><Box bg={"gray.200"} fontSize={"xl"} height={1} size={"md"}/>
+      const Ui = (props: Props) =><Box bg={"gray.200"} fontSize={"xl"} height={"1"} size={"md"}/>
       `,
     },
     {
       code: `
-      import {Box} from '@chakra-ui/react';
-      const Ui = (props: Props) =><Box height={1} size={"md"} fontSize={"xl"} bg={"gray.200"} />
-      `,
+        import {Box} from '@chakra-ui/react';
+        const Ui = (props: Props) =><Box height={1} size={"md"} fontSize={"xl"} bg={"gray.200"} />
+        `,
       errors: [{ message: "invalid order" }],
       output: `
-      import {Box} from '@chakra-ui/react';
-      const Ui = (props: Props) =><Box bg={"gray.200"} fontSize={"xl"} height={1} size={"md"} />
-      `,
+        import {Box} from '@chakra-ui/react';
+        const Ui = (props: Props) =><Box bg={"gray.200"} fontSize={"xl"} height={1} size={"md"} />
+        `,
     },
     {
       code: `
-      import { Box } from "@chakra-ui/react";
-      const Ui = (props: Props) => (
-        <Box height={1} size={"md"} fontSize={"xl"} bg={"gray.200"} />
-      );
-      `,
+        import { Box } from "@chakra-ui/react";
+        const Ui = (props: Props) => (
+          <Box height={1} size={"md"} fontSize={"xl"} bg={"gray.200"} />
+        );
+        `,
       errors: [{ message: "invalid order" }],
       output: `
-      import { Box } from "@chakra-ui/react";
-      const Ui = (props: Props) => (
-        <Box bg={"gray.200"} fontSize={"xl"} height={1} size={"md"} />
-      );
-      `,
+        import { Box } from "@chakra-ui/react";
+        const Ui = (props: Props) => (
+          <Box bg={"gray.200"} fontSize={"xl"} height={1} size={"md"} />
+        );
+        `,
     },
     {
       code: `
-      import { Box } from "@chakra-ui/react";
-      <Box
-        className={className}
-        onStageAnswer={onStageAnswer}
-        onCommitAnswer={onCommitAnswer}
-        isFocused={isFocused}
-        direction={direction}
-        allowMultipleSelection={allowMultipleSelection}
-        measureLongestChildNode={measureLongestChildNode}
-        layoutItemsSize={layoutItemsSize}
-        handleAppScroll={handleAppScroll}
-        isActive={isActive}
-        resetSelection={resetSelection}
-        onKeyboardChoiceHovered={onKeyboardChoiceHovered}
-        keyboardShortcutType
-      />;
-  `,
+        import { Box } from "@chakra-ui/react";
+        <Box
+          className={className}
+          onStageAnswer={onStageAnswer}
+          onCommitAnswer={onCommitAnswer}
+          isFocused={isFocused}
+          direction={direction}
+          allowMultipleSelection={allowMultipleSelection}
+          measureLongestChildNode={measureLongestChildNode}
+          layoutItemsSize={layoutItemsSize}
+          handleAppScroll={handleAppScroll}
+          isActive={isActive}
+          resetSelection={resetSelection}
+          onKeyboardChoiceHovered={onKeyboardChoiceHovered}
+          // keyboardShortcutType
+        />;
+    `,
       output: `
-      import { Box } from "@chakra-ui/react";
-      <Box
-        allowMultipleSelection={allowMultipleSelection}
-        className={className}
-        direction={direction}
-        handleAppScroll={handleAppScroll}
-        isActive={isActive}
-        isFocused={isFocused}
-        keyboardShortcutType
-        layoutItemsSize={layoutItemsSize}
-        measureLongestChildNode={measureLongestChildNode}
-        onCommitAnswer={onCommitAnswer}
-        onKeyboardChoiceHovered={onKeyboardChoiceHovered}
-        onStageAnswer={onStageAnswer}
-        resetSelection={resetSelection}
-      />;
-  `,
+        import { Box } from "@chakra-ui/react";
+        <Box
+          allowMultipleSelection={allowMultipleSelection}
+          className={className}
+          direction={direction}
+          handleAppScroll={handleAppScroll}
+          isActive={isActive}
+          isFocused={isFocused}
+          layoutItemsSize={layoutItemsSize}
+          measureLongestChildNode={measureLongestChildNode}
+          onCommitAnswer={onCommitAnswer}
+          onKeyboardChoiceHovered={onKeyboardChoiceHovered}
+          onStageAnswer={onStageAnswer}
+          resetSelection={resetSelection}
+          // keyboardShortcutType
+        />;
+    `,
       errors: 1,
     },
   ],
