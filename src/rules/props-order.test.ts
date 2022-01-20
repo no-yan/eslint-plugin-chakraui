@@ -5,6 +5,8 @@ const tester = new RuleTester({
   parserOptions: { ecmaFeatures: { jsx: true } },
 });
 
+// TODO: Cases that contain comment-out
+
 tester.run("props-order", rule, {
   valid: [
     {
@@ -68,7 +70,7 @@ tester.run("props-order", rule, {
           isActive={isActive}
           resetSelection={resetSelection}
           onKeyboardChoiceHovered={onKeyboardChoiceHovered}
-          // keyboardShortcutType
+          keyboardShortcutType
         />;
     `,
       output: `
@@ -80,13 +82,13 @@ tester.run("props-order", rule, {
           handleAppScroll={handleAppScroll}
           isActive={isActive}
           isFocused={isFocused}
+          keyboardShortcutType
           layoutItemsSize={layoutItemsSize}
           measureLongestChildNode={measureLongestChildNode}
           onCommitAnswer={onCommitAnswer}
           onKeyboardChoiceHovered={onKeyboardChoiceHovered}
           onStageAnswer={onStageAnswer}
           resetSelection={resetSelection}
-          // keyboardShortcutType
         />;
     `,
       errors: 1,
