@@ -54,40 +54,40 @@ tester.run("props-order", rule, {
     },
     {
       code: `
-    import {Box} from '@chakra-ui/react';
-    <Box
-className={className}
-onStageAnswer={onStageAnswer}
-onCommitAnswer={onCommitAnswer}
-isFocused={isFocused}
-direction={direction}
-allowMultipleSelection={allowMultipleSelection}
-measureLongestChildNode={measureLongestChildNode}
-layoutItemsSize={layoutItemsSize}
-handleAppScroll={handleAppScroll}
-isActive={isActive}
-resetSelection={resetSelection}
-onKeyboardChoiceHovered={onKeyboardChoiceHovered}
-keyboardShortcutType
-    />
+      import { Box } from "@chakra-ui/react";
+      <Box
+        className={className}
+        onStageAnswer={onStageAnswer}
+        onCommitAnswer={onCommitAnswer}
+        isFocused={isFocused}
+        direction={direction}
+        allowMultipleSelection={allowMultipleSelection}
+        measureLongestChildNode={measureLongestChildNode}
+        layoutItemsSize={layoutItemsSize}
+        handleAppScroll={handleAppScroll}
+        isActive={isActive}
+        resetSelection={resetSelection}
+        onKeyboardChoiceHovered={onKeyboardChoiceHovered}
+        keyboardShortcutType
+      />;
   `,
       output: `
-    import {Box} from '@chakra-ui/react';
-    <Box
-allowMultipleSelection={allowMultipleSelection}
-className={className}
-direction={direction}
-handleAppScroll={handleAppScroll}
-isActive={isActive}
-isFocused={isFocused}
-keyboardShortcutType
-layoutItemsSize={layoutItemsSize}
-measureLongestChildNode={measureLongestChildNode}
-onCommitAnswer={onCommitAnswer}
-onKeyboardChoiceHovered={onKeyboardChoiceHovered}
-onStageAnswer={onStageAnswer}
-resetSelection={resetSelection}
-    />
+      import { Box } from "@chakra-ui/react";
+      <Box
+        allowMultipleSelection={allowMultipleSelection}
+        className={className}
+        direction={direction}
+        handleAppScroll={handleAppScroll}
+        isActive={isActive}
+        isFocused={isFocused}
+        keyboardShortcutType
+        layoutItemsSize={layoutItemsSize}
+        measureLongestChildNode={measureLongestChildNode}
+        onCommitAnswer={onCommitAnswer}
+        onKeyboardChoiceHovered={onKeyboardChoiceHovered}
+        onStageAnswer={onStageAnswer}
+        resetSelection={resetSelection}
+      />;
   `,
       errors: 1,
     },
