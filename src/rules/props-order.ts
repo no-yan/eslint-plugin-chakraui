@@ -43,27 +43,16 @@ const sortProperties = (properties: JSXAttribute[]) => {
   return sorted;
 };
 
-const concatSortedText = (sorted: JSXAttribute[], unsorted: JSXAttribute[], sourceCode: SourceCode) => {
-  let sortedText = "";
+const getPropertyNameAndValue = (node: JSXAttribute, sourceCode: SourceCode) => {
+  const propName = node.name.name;
+  // This gets full text, like {1}, {"string"}, {Variable}, "string".
+  // By keeping it enclosed in brackets or quotes, the logic of replace will be easier.
+  const propValue = sourceCode.getText(node.value as unknown as Node);
 
-  for (let i = 0; i < sorted.length; i++) {
-    const sortedAttr = sorted[i] as unknown as Node;
-
-    sortedText += sourceCode.getText(sortedAttr);
-
-    // add space or break line
-    if (i !== sorted.length - 1) {
-      const isNewLine = unsorted[i].loc?.end.line !== unsorted[i + 1].loc?.start.line;
-
-      if (isNewLine) {
-        // this doesn't keep its spacing as it was.
-        sortedText += "\n";
-      } else {
-        sortedText += " ";
-      }
-    }
-  }
-  return sortedText;
+  return {
+    propName,
+    propValue,
+  };
 };
 
 const rule: Rule.RuleModule = {
@@ -92,7 +81,6 @@ const rule: Rule.RuleModule = {
         const sorted = sortProperties(unsorted);
 
         const sourceCode = context.getSourceCode();
-        let sortedText = concatSortedText(sorted, unsorted, sourceCode);
 
         let shouldFix = false;
         for (let i = 0; i < sorted.length; i++) {
@@ -101,6 +89,36 @@ const rule: Rule.RuleModule = {
             break;
           }
         }
+
+        const generateFix = (fixer: Rule.RuleFixer) => {
+          const fixingArray: Rule.Fix[] = [];
+          for (let i = sorted.length - 1; i >= 0; i--) {
+            const node = unsorted[i];
+            const sortedNode = sorted[i];
+            const { propName: currentProp, propValue: currentValue } = getPropertyNameAndValue(node, sourceCode);
+            const { propName: nextProp, propValue: nextValue } = getPropertyNameAndValue(sortedNode, sourceCode);
+
+            if (currentProp !== nextProp) {
+              if (typeof currentProp !== "string" || typeof nextProp !== "string") {
+                continue;
+              }
+
+              const fixName = fixer.replaceText(node.name as unknown as Node, nextProp);
+              if (currentValue === undefined || nextValue === undefined) {
+                continue;
+              }
+
+              const range = node?.value?.range;
+              if (!range) {
+                continue;
+              }
+              const fixValue = fixer.replaceTextRange(range, nextValue);
+              fixingArray.push(fixValue);
+              fixingArray.push(fixName);
+            }
+          }
+          return fixingArray;
+        };
 
         if (shouldFix) {
           const nodeStart = unsorted[0].range?.[0];
@@ -111,9 +129,7 @@ const rule: Rule.RuleModule = {
           context.report({
             messageId: "invalidOrder",
             node: jsxElement,
-            fix: function (fixer) {
-              return fixer.replaceTextRange([nodeStart, nodeEnd], sortedText);
-            },
+            fix: generateFix,
           });
         }
       },
