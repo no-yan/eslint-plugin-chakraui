@@ -47,7 +47,12 @@ const getPropertyNameAndValue = (node: JSXAttribute, sourceCode: SourceCode) => 
   const propName = node.name.name;
   // This gets full text, like {1}, {"string"}, {Variable}, "string".
   // By keeping it enclosed in brackets or quotes, the logic of replace will be easier.
-  const propValue = sourceCode.getText(node.value as unknown as Node);
+  let propValue;
+  if (node.value !== null) {
+    propValue = sourceCode.getText(node.value as unknown as Node);
+  } else {
+    propValue = undefined;
+  }
 
   return {
     propName,
@@ -92,29 +97,46 @@ const rule: Rule.RuleModule = {
 
         const generateFix = (fixer: Rule.RuleFixer) => {
           const fixingArray: Rule.Fix[] = [];
+          //Operate from the back so that the position of the unoperated node is not changed.
+          // If you start from the front, each time you manipulate the props, the position of the node will shift and break.
           for (let i = sorted.length - 1; i >= 0; i--) {
             const node = unsorted[i];
             const sortedNode = sorted[i];
             const { propName: currentProp, propValue: currentValue } = getPropertyNameAndValue(node, sourceCode);
             const { propName: nextProp, propValue: nextValue } = getPropertyNameAndValue(sortedNode, sourceCode);
 
+            // props may be JSXIdentifier, which is not yet supported.
+            if (typeof currentProp !== "string" || typeof nextProp !== "string") {
+              continue;
+            }
+
             if (currentProp !== nextProp) {
-              if (typeof currentProp !== "string" || typeof nextProp !== "string") {
-                continue;
-              }
-
               const fixName = fixer.replaceText(node.name as unknown as Node, nextProp);
-              if (currentValue === undefined || nextValue === undefined) {
-                continue;
-              }
 
-              const range = node?.value?.range;
-              if (!range) {
-                continue;
+              if (currentValue !== undefined && nextValue !== undefined) {
+                const range = node?.value?.range;
+                if (!range) {
+                  continue;
+                }
+                const fixValue = fixer.replaceTextRange(range, nextValue);
+                fixingArray.push(fixValue);
+                fixingArray.push(fixName);
+              } else {
+                // TODO:
+                let fixNode;
+                if (currentValue === undefined && nextValue === undefined) {
+                  // TODO: Add test from <Box b a/> to <Box a b/>;
+                  fixNode = fixer.replaceText(node.name as unknown as Node, nextProp);
+                } else if (currentValue === undefined) {
+                  // from <Box boolean/> to <Box a={1}/>
+                  fixNode = fixer.replaceText(node as unknown as Node, `${nextProp}=${nextValue}`);
+                } else {
+                  // nextvalue === undefined.
+                  // from <Box props=""/> to <Box boolean/>
+                  fixNode = fixer.replaceText(node as unknown as Node, nextProp);
+                }
+                fixingArray.push(fixNode);
               }
-              const fixValue = fixer.replaceTextRange(range, nextValue);
-              fixingArray.push(fixValue);
-              fixingArray.push(fixName);
             }
           }
           return fixingArray;
