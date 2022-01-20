@@ -93,5 +93,38 @@ tester.run("props-order", rule, {
     `,
       errors: 1,
     },
+    {
+      code: `
+      import {Box} from '@chakra-ui/react';
+      const Ui = (props: Props) =><Box b a />
+      `,
+      errors: [{ message: "invalid order" }],
+      output: `
+      import {Box} from '@chakra-ui/react';
+      const Ui = (props: Props) =><Box a b />
+      `,
+    },
+    {
+      code: `
+      import {Box} from '@chakra-ui/react';
+      const Ui = (props: Props) =><Box b a='1' />
+      `,
+      errors: [{ message: "invalid order" }],
+      output: `
+      import {Box} from '@chakra-ui/react';
+      const Ui = (props: Props) =><Box a='1' b />
+      `,
+    },
+    {
+      code: `
+      import {Box} from '@chakra-ui/react';
+      const Ui = (props: Props) =><Box b={b} a />
+      `,
+      errors: [{ message: "invalid order" }],
+      output: `
+      import {Box} from '@chakra-ui/react';
+      const Ui = (props: Props) =><Box a b={b} />
+      `,
+    },
   ],
 });
