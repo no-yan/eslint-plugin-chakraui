@@ -1,7 +1,6 @@
-import noLiteral from "./rules/no-literal";
-
+import propsOrder from "./rules/props-order";
 export = {
   rules: {
-    "no-literal": noLiteral,
+    "props-order": propsOrder,
   },
 };
