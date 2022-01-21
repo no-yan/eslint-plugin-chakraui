@@ -79,6 +79,7 @@ tester.run("props-order", rule, {
     },
   ],
   invalid: [
+    // one-line sort
     {
       code: `
       import {Box} from '@chakra-ui/react';
@@ -90,15 +91,16 @@ tester.run("props-order", rule, {
       const Ui = (props: Props) =><Box bg={"gray.200"} fontSize={"xl"} height={"1"} size={"md"}/>
       `,
     },
+    // convert from "" to {}
     {
       code: `
         import {Box} from '@chakra-ui/react';
-        const Ui = (props: Props) =><Box height={1} size={"md"} fontSize={"xl"} bg={"gray.200"} />
+        const Ui = (props: Props) =><Box height={1} fontSize={"xl"} />
         `,
       errors: [{ messageId: "invalidOrder" }],
       output: `
         import {Box} from '@chakra-ui/react';
-        const Ui = (props: Props) =><Box bg={"gray.200"} fontSize={"xl"} height={1} size={"md"} />
+        const Ui = (props: Props) =><Box fontSize={"xl"} height={1} />
         `,
     },
     {
@@ -116,6 +118,7 @@ tester.run("props-order", rule, {
         );
         `,
     },
+    // multi-line, boolean, className
     {
       code: `
         import { Box } from "@chakra-ui/react";
@@ -155,6 +158,7 @@ tester.run("props-order", rule, {
     `,
       errors: 1,
     },
+    // boolean to boolean
     {
       code: `
       import {Box} from '@chakra-ui/react';
@@ -166,6 +170,7 @@ tester.run("props-order", rule, {
       const Ui = (props: Props) =><Box a b />
       `,
     },
+    // boolean to string
     {
       code: `
       import {Box} from '@chakra-ui/react';
@@ -177,6 +182,7 @@ tester.run("props-order", rule, {
       const Ui = (props: Props) =><Box a='1' b />
       `,
     },
+    // boolean to curly
     {
       code: `
       import {Box} from '@chakra-ui/react';
