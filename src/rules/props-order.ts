@@ -84,12 +84,15 @@ const rule: Rule.RuleModule = {
         const chakraElement = jsxElement as unknown as JSXOpeningElement;
         const unsorted = chakraElement.attributes as unknown as JSXAttribute[]; // TODO:check spread
         const sorted = sortProperties(unsorted);
+        // console.log(sorted);
 
         const sourceCode = context.getSourceCode();
 
         let shouldFix = false;
         for (let i = 0; i < sorted.length; i++) {
-          if (sorted[i].name.name !== unsorted[0].name.name) {
+          const { propName: currentProp } = getPropertyNameAndValue(unsorted[i], sourceCode);
+          const { propName: nextProp } = getPropertyNameAndValue(sorted[i], sourceCode);
+          if (currentProp !== nextProp) {
             shouldFix = true;
             break;
           }
