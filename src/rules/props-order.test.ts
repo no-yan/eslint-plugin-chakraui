@@ -6,6 +6,9 @@ const tester = new RuleTester({
 });
 
 // TODO: Cases that contain comment-out
+// "eslint-disable-next-line~~~"
+// spreading
+// key supprot
 
 tester.run("props-order", rule, {
   valid: [
@@ -15,6 +18,19 @@ tester.run("props-order", rule, {
       const Ui = (props: Props) =><Button height={1}>hello</Button>
       `,
     },
+    //     {
+    //       code: `
+    //     import {
+    //       Drawer
+    //   } from '@chakra-ui/react';
+    //     <Drawer
+    //     finalFocusRef={btnRef}
+    //     // eslint-disable-next-line @no-yan/chakraui/props-order
+    //     onClose={onClose}
+    //     isOpen={isOpen}
+    //     placement="right"
+    // />`,
+    //     },
     {
       code: `
       import {
@@ -68,7 +84,7 @@ tester.run("props-order", rule, {
       import {Box} from '@chakra-ui/react';
       const Ui = (props: Props) =><Box height={"1"} size={"md"} fontSize={"xl"} bg={"gray.200"}/>
       `,
-      errors: [{ message: "invalid order" }],
+      errors: [{ messageId: "invalidOrder" }],
       output: `
       import {Box} from '@chakra-ui/react';
       const Ui = (props: Props) =><Box bg={"gray.200"} fontSize={"xl"} height={"1"} size={"md"}/>
@@ -79,7 +95,7 @@ tester.run("props-order", rule, {
         import {Box} from '@chakra-ui/react';
         const Ui = (props: Props) =><Box height={1} size={"md"} fontSize={"xl"} bg={"gray.200"} />
         `,
-      errors: [{ message: "invalid order" }],
+      errors: [{ messageId: "invalidOrder" }],
       output: `
         import {Box} from '@chakra-ui/react';
         const Ui = (props: Props) =><Box bg={"gray.200"} fontSize={"xl"} height={1} size={"md"} />
@@ -92,7 +108,7 @@ tester.run("props-order", rule, {
           <Box height={1} size={"md"} fontSize={"xl"} bg={"gray.200"} />
         );
         `,
-      errors: [{ message: "invalid order" }],
+      errors: [{ messageId: "invalidOrder" }],
       output: `
         import { Box } from "@chakra-ui/react";
         const Ui = (props: Props) => (
@@ -144,7 +160,7 @@ tester.run("props-order", rule, {
       import {Box} from '@chakra-ui/react';
       const Ui = (props: Props) =><Box b a />
       `,
-      errors: [{ message: "invalid order" }],
+      errors: [{ messageId: "invalidOrder" }],
       output: `
       import {Box} from '@chakra-ui/react';
       const Ui = (props: Props) =><Box a b />
@@ -155,7 +171,7 @@ tester.run("props-order", rule, {
       import {Box} from '@chakra-ui/react';
       const Ui = (props: Props) =><Box b a='1' />
       `,
-      errors: [{ message: "invalid order" }],
+      errors: [{ messageId: "invalidOrder" }],
       output: `
       import {Box} from '@chakra-ui/react';
       const Ui = (props: Props) =><Box a='1' b />
@@ -166,7 +182,7 @@ tester.run("props-order", rule, {
       import {Box} from '@chakra-ui/react';
       const Ui = (props: Props) =><Box b={b} a />
       `,
-      errors: [{ message: "invalid order" }],
+      errors: [{ messageId: "invalidOrder" }],
       output: `
       import {Box} from '@chakra-ui/react';
       const Ui = (props: Props) =><Box a b={b} />
