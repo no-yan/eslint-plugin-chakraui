@@ -15,6 +15,52 @@ tester.run("props-order", rule, {
       const Ui = (props: Props) =><Button height={1}>hello</Button>
       `,
     },
+    {
+      code: `
+      import {
+        Box,
+        Button,
+        Collapse,
+        Flex,
+        Icon,
+        IconButton,
+        Link,
+        Popover,
+        PopoverContent,
+        PopoverTrigger,
+        Stack,
+        Text,
+        useBreakpointValue,
+        useColorModeValue,
+        useDisclosure,
+    } from '@chakra-ui/react';
+      <Popover trigger="hover">
+      <PopoverTrigger>
+          <Button
+              _hover={{ bg: colorScheme }}
+              bg={colorScheme}
+              size="xs"
+          >
+              color
+          </Button>
+      </PopoverTrigger>
+      <PopoverContent
+          bg="transparent"
+          border="0px"
+          borderColor="transparent"
+          p={1}
+          //To avoid blur around the picker area, event outside.
+          position="relative"
+          top={-1}
+          w="min-content"
+      >
+          <PopoverBody>
+              <RgbaColorPicker color={color} onChange={setColor} />
+          </PopoverBody>
+      </PopoverContent>
+  </Popover>
+      `,
+    },
   ],
   invalid: [
     {
