@@ -280,7 +280,7 @@ const misc = [
 const _as = ["as"] as const;
 
 const sx = ["sx"] as const;
-const styleProps = {
+export const stylePropsGroup = {
   _as,
   space,
   color,
@@ -300,13 +300,14 @@ const styleProps = {
   misc,
   sx,
 } as const;
-type stylePropsKey = keyof typeof styleProps;
-
-type StylePropsPriority<Key extends stylePropsKey> = {
+type StyleGroup = typeof stylePropsGroup;
+export type StyleGroupKey = keyof typeof stylePropsGroup;
+export type StypeProps = StyleGroup[StyleGroupKey][number];
+export type StylePropsPriority<Key extends StyleGroupKey> = {
   [K in Key]: number;
 };
 
-const stylePropsPriority: StylePropsPriority<stylePropsKey> = {
+export const stylePropsPriority: StylePropsPriority<StyleGroupKey> = {
   _as: 0,
   // Positioning
   position: 1,
@@ -334,4 +335,4 @@ const stylePropsPriority: StylePropsPriority<stylePropsKey> = {
   pseudo: 13,
   misc: 14,
   sx: 100,
-};
+} as const;
