@@ -1,23 +1,27 @@
 import { isChakraComponent } from "./../utils/isChakraComponent";
-import { Rule, SourceCode } from "eslint";
+import { Rule } from "eslint";
 import { Identifier, ImportDeclaration, Node } from "estree";
 import type { JSXOpeningElement, JSXAttribute } from "estree-jsx";
 import { updateImportedMap } from "../utils/updateImportedMap";
+import { getPropertyNameAndValue, getPropertyName } from "../utils/getPropertyName";
 
 // JSXSpread will be ignored due to potential override.
 // e.g. `<Box bg='red' {...props} />` is different with `<Box {...props} bg='red>` if props is {bg:'white'}.
 
-// TODO: supprot reserved words.
-// see https://github.com/yannickcr/eslint-plugin-react/blob/master/lib/rules/jsx-sort-props.js
-// const RESERVED_PROPS_LIST = [
-//   'children',
-//   'dangerouslySetInnerHTML',
-//   'key',
-//   'ref',
-// ];
+const RESERVED_PROPS_LIST = ["as", "className", "children", "dangerouslySetInnerHTML", "key", "ref"];
 
 const compare = (a: string, b: string) => {
   // if (a.type === 'JSXSpreadAttribute' || b.type === 'JSXSpreadAttribute'){}
+
+  if (RESERVED_PROPS_LIST.includes(a)) {
+    if (RESERVED_PROPS_LIST.includes(b)) {
+      return a < b ? -1 : 1;
+    }
+    return -1;
+  } else if (RESERVED_PROPS_LIST.includes(b)) {
+    return 1;
+  }
+
   switch (true) {
     case a < b:
       return -1;
@@ -41,32 +45,6 @@ const sortProperties = (properties: JSXAttribute[]) => {
   });
 
   return sorted;
-};
-
-const getPropertyName = (node: JSXAttribute) => {
-  // In spec, JSXAttributeName could be either JSXNamespacedName or string.
-  // However, React does not support this. So everything can be considered a string.
-  // https://github.com/facebook/jsx/issues/13#issuecomment-54373080
-  const propName = node.name.name as string;
-  return propName;
-};
-
-const getPropertyNameAndValue = (node: JSXAttribute, sourceCode: SourceCode) => {
-  const propName = getPropertyName(node);
-
-  let propValue;
-  if (node.value !== null) {
-    // This gets full text, like {1}, {"string"}, {Variable}, "string".
-    // By keeping it enclosed in brackets or quotes, the logic of replace will be easier.
-    propValue = sourceCode.getText(node.value as unknown as Node);
-  } else {
-    propValue = undefined;
-  }
-
-  return {
-    propName,
-    propValue,
-  };
 };
 
 const rule: Rule.RuleModule = {
@@ -99,8 +77,8 @@ const rule: Rule.RuleModule = {
         let shouldFix = false;
         let reportNodeIndex: number = -1;
         for (let i = 0; i < sorted.length - 1; i++) {
-          const { propName: currentProp } = getPropertyNameAndValue(unsorted[i], sourceCode);
-          const { propName: nextProp } = getPropertyNameAndValue(sorted[i], sourceCode);
+          const currentProp = getPropertyName(unsorted[i]);
+          const nextProp = getPropertyName(sorted[i]);
           if (currentProp !== nextProp) {
             shouldFix = true;
             reportNodeIndex = i;

@@ -141,8 +141,8 @@ tester.run("props-order", rule, {
       output: `
         import { Box } from "@chakra-ui/react";
         <Box
-          allowMultipleSelection={allowMultipleSelection}
           className={className}
+          allowMultipleSelection={allowMultipleSelection}
           direction={direction}
           handleAppScroll={handleAppScroll}
           isActive={isActive}
