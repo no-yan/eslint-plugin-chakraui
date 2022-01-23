@@ -18,6 +18,13 @@ tester.run("props-order", rule, {
       const Ui = (props: Props) =><Button height={1}>hello</Button>
       `,
     },
+    {
+      name: "import alias",
+      code: `
+      import {Button as CButton} from '@chakra-ui/react';
+      const Ui = (props: Props) =><CButton height={1}>hello</CButton>
+      `,
+    },
     //     {
     //       code: `
     //     import {
