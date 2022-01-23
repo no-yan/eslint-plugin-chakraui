@@ -5,6 +5,7 @@ type Shorthanded<Key extends `${Redundant}${string}`, Redundant extends string> 
 const propsPriority = [];
 
 // TODO: concider theme keys?
+// How should sx be sorted?
 
 const margin = [
   "m",
@@ -278,6 +279,7 @@ const misc = [
 
 const _as = ["as"] as const;
 
+const sx = ["sx"] as const;
 const styleProps = {
   _as,
   space,
@@ -296,11 +298,12 @@ const styleProps = {
   shadow,
   pseudo,
   misc,
+  sx,
 } as const;
 type stylePropsKey = keyof typeof styleProps;
 
 type StylePropsPriority<Key extends stylePropsKey> = {
-  [K in Key]: any; // TODO: remove any
+  [K in Key]: number;
 };
 
 const stylePropsPriority: StylePropsPriority<stylePropsKey> = {
@@ -318,18 +321,17 @@ const stylePropsPriority: StylePropsPriority<stylePropsKey> = {
 
   // Typography
   color: 6,
-  typography: 6,
+  typography: 7,
 
   // Visual
   // bgColor is not contained.
-  background: 7,
-  gradient: 8,
-  borders: 9,
-  borderRadius: 10,
+  background: 8,
+  gradient: 9,
+  borders: 10,
+  borderRadius: 11,
 
-  shadow: 11,
-  pseudo: 12,
-  misc: 13,
+  shadow: 12,
+  pseudo: 13,
+  misc: 14,
+  sx: 100,
 };
-
-const x = {};
