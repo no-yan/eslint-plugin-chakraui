@@ -39,55 +39,44 @@ tester.run("props-order", rule, {
     // />`,
     //     },
     {
+      name: "real case",
       code: `
       import {
         Box,
         Button,
-        Collapse,
-        Flex,
-        Icon,
-        IconButton,
-        Link,
         Popover,
         PopoverContent,
         PopoverTrigger,
-        Stack,
         Text,
-        useBreakpointValue,
-        useColorModeValue,
-        useDisclosure,
     } from '@chakra-ui/react';
-      <Popover trigger="hover">
-      <PopoverTrigger>
-          <Button
-              _hover={{ bg: colorScheme }}
-              bg={colorScheme}
-              size="xs"
-          >
-              color
-          </Button>
-      </PopoverTrigger>
-      <PopoverContent
-          bg="transparent"
-          border="0px"
-          borderColor="transparent"
-          p={1}
-          //To avoid blur around the picker area, event outside.
-          position="relative"
-          top={-1}
-          w="min-content"
-      >
-          <PopoverBody>
-              <RgbaColorPicker color={color} onChange={setColor} />
-          </PopoverBody>
-      </PopoverContent>
-  </Popover>
+    import { RgbaColorPicker } from 'react-colorful';
+    <Popover trigger="hover">
+        <PopoverTrigger>
+            <Button bg={colorScheme} _hover={{ bg: colorScheme }} size="xs">
+                color
+            </Button>
+        </PopoverTrigger>
+        <PopoverContent
+            top={-1}
+            w="min-content"
+            p={1}
+            bg="transparent"
+            //To avoid blur around the picker area, event outside.
+            borderColor="transparent"
+            border="0px"
+            position="relative"
+        >
+            <PopoverBody>
+                <RgbaColorPicker color={color} onChange={setColor} />
+            </PopoverBody>
+        </PopoverContent>
+    </Popover>;
       `,
     },
   ],
   invalid: [
-    // one-line sort
     {
+      name: "single line sorting",
       code: `
       import {Box} from '@chakra-ui/react';
       const Ui = (props: Props) =><Box height={"1"} size={"md"} fontSize={"xl"} bg={"gray.200"}/>
@@ -95,22 +84,24 @@ tester.run("props-order", rule, {
       errors: [{ messageId: "invalidOrder" }],
       output: `
       import {Box} from '@chakra-ui/react';
-      const Ui = (props: Props) =><Box bg={"gray.200"} fontSize={"xl"} height={"1"} size={"md"}/>
+      const Ui = (props: Props) =><Box height={"1"} fontSize={"xl"} bg={"gray.200"} size={"md"}/>
       `,
     },
     // convert from "" to {}
     {
+      name: "plural props",
       code: `
-        import {Box} from '@chakra-ui/react';
-        const Ui = (props: Props) =><Box height={1} fontSize={"xl"} />
-        `,
+      import {Box} from '@chakra-ui/react';
+      const Ui = (props: Props) =><Box fontSize={"xl"} height={1} />
+      `,
       errors: [{ messageId: "invalidOrder" }],
       output: `
-        import {Box} from '@chakra-ui/react';
-        const Ui = (props: Props) =><Box fontSize={"xl"} height={1} />
-        `,
+      import {Box} from '@chakra-ui/react';
+      const Ui = (props: Props) =><Box height={1} fontSize={"xl"} />
+      `,
     },
     {
+      name: 'prop={"string"}',
       code: `
         import { Box } from "@chakra-ui/react";
         const Ui = (props: Props) => (
@@ -121,12 +112,13 @@ tester.run("props-order", rule, {
       output: `
         import { Box } from "@chakra-ui/react";
         const Ui = (props: Props) => (
-          <Box bg={"gray.200"} fontSize={"xl"} height={1} size={"md"} />
+          <Box height={1} fontSize={"xl"} bg={"gray.200"} size={"md"} />
         );
         `,
     },
     // multi-line, boolean, className
     {
+      name: "Multi Line",
       code: `
         import { Box } from "@chakra-ui/react";
         <Box
@@ -134,8 +126,8 @@ tester.run("props-order", rule, {
           onStageAnswer={onStageAnswer}
           onCommitAnswer={onCommitAnswer}
           isFocused={isFocused}
-          direction={direction}
           allowMultipleSelection={allowMultipleSelection}
+          direction={direction}
           measureLongestChildNode={measureLongestChildNode}
           layoutItemsSize={layoutItemsSize}
           handleAppScroll={handleAppScroll}
@@ -149,8 +141,8 @@ tester.run("props-order", rule, {
         import { Box } from "@chakra-ui/react";
         <Box
           className={className}
-          allowMultipleSelection={allowMultipleSelection}
           direction={direction}
+          allowMultipleSelection={allowMultipleSelection}
           handleAppScroll={handleAppScroll}
           isActive={isActive}
           isFocused={isFocused}
@@ -167,6 +159,7 @@ tester.run("props-order", rule, {
     },
     // boolean to boolean
     {
+      name: "boolean to boolean",
       code: `
       import {Box} from '@chakra-ui/react';
       const Ui = (props: Props) =><Box b a />
@@ -179,6 +172,7 @@ tester.run("props-order", rule, {
     },
     // boolean to string
     {
+      name: 'boolean to a="1"',
       code: `
       import {Box} from '@chakra-ui/react';
       const Ui = (props: Props) =><Box b a='1' />
@@ -191,6 +185,7 @@ tester.run("props-order", rule, {
     },
     // boolean to curly
     {
+      name: "boolean to b={b}",
       code: `
       import {Box} from '@chakra-ui/react';
       const Ui = (props: Props) =><Box b={b} a />

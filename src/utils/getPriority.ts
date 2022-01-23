@@ -5,7 +5,7 @@ type Shorthanded<Key extends `${Redundant}${string}`, Redundant extends string> 
 const propsPriority = [];
 
 // TODO: concider theme keys?
-// How should sx be sorted?
+// How should sx be sorted? Temporary placing in the last.
 
 const margin = [
   "m",
@@ -300,6 +300,7 @@ export const stylePropsGroup = {
   misc,
   sx,
 } as const;
+
 type StyleGroup = typeof stylePropsGroup;
 export type StyleGroupKey = keyof typeof stylePropsGroup;
 export type StypeProps = StyleGroup[StyleGroupKey][number];

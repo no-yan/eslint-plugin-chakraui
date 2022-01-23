@@ -44,9 +44,12 @@ const sortProperties = (properties: JSXAttribute[], priorityMap: Map<StypeProps 
     const differentGroup = "differentGroup";
     const aPriority = getPriority(a);
     const bPriority = getPriority(b);
+    // TODO: consider undefined => not chakra property.
+    // TODO: concider some component specific props. e.g. 'ratio'
     const result: Result = aPriority === bPriority ? sameGroup : differentGroup;
     switch (result) {
       case "sameGroup":
+        // TODO: non alphabetic order sorting
         return a < b ? -1 : 1;
       case "differentGroup":
         return aPriority < bPriority ? -1 : 1;
