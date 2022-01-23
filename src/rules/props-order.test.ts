@@ -25,6 +25,13 @@ tester.run("props-order", rule, {
       const Ui = (props: Props) =><CButton height={1}>hello</CButton>
       `,
     },
+    {
+      name: "className first",
+      code: `
+      import {Button } from '@chakra-ui/react';
+      const Ui = (props: Props) =><Button className='' height={1}>hello</Button>
+      `,
+    },
     //     {
     //       code: `
     //     import {
@@ -89,7 +96,7 @@ tester.run("props-order", rule, {
     },
     // convert from "" to {}
     {
-      name: "plural props",
+      name: "single line sorting. convert from '' to {}",
       code: `
       import {Box} from '@chakra-ui/react';
       const Ui = (props: Props) =><Box fontSize={"xl"} height={1} />
@@ -118,7 +125,7 @@ tester.run("props-order", rule, {
     },
     // multi-line, boolean, className
     {
-      name: "Multi Line",
+      name: "Multi Line and boolean",
       code: `
         import { Box } from "@chakra-ui/react";
         <Box
