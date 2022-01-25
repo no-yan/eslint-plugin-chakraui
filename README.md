@@ -1,35 +1,27 @@
-# ESLint plugin tutorial
+# ESLint plugin of Chakra UI
 
 ## What's this?
 
-This is an example repository to explain how to create your ESLint rules.
+Rules enforcing best practices and consistency using [Chakra UI](https://chakra-ui.com/).
 
-## Why should we learn how to create custom ESLint rules?
+For now, this plugin only supports sorting properties.
 
-Lint rules help to keep our codes' quality constant. Automatic code checking brings time for more productive activities, and also eliminates indivisual effects from code review.
+![eslintChakraUI](https://user-images.githubusercontent.com/63000297/150904856-cc32ea69-f68e-4dbf-ab42-effcef15378e.gif)
 
-Creating ESLint rules is a good subject to learn AST(Abstract Syntax Tree) analysis. Today, analysis of AST is the foundation of the JavaScript build ecosystem. There are many libraries using AST, such as Babel plugins, custom TypeScript transformers, prettier, webpack and so on. Your team's JavaScript gets improved significantly if you can control AST freely!
+## For potensial users
 
-## Tutorial
+@Monchi created similar plugin at the same time. Since it's better to collaborate, @no-yan will focus on contributing to his library.
+I recommend you to try his one too.
 
-[See guides](./guide/README.md).
+[Monchi/eslint-plugin-chakra-ui](https://github.com/Monchi/eslint-plugin-chakra-ui)
 
-## Getting started
 
-This repository is also designed to work as a project template for custom ESLint rules.
+It has two advantages over mine, which are parser and other rules.
 
-If you want to start quickly, follow the procedure below:
+Its default parser is @typescript/parser. Though it has an overhead in execution speed, but it can reduce false positives with its complex flow analysis.
 
-- Clone this repository
-- Remove `.git` and `guide` dirs
-- Change pkg name via edit `package.json`
-- Change and test rule codes under `src/rules` dir
+Also, it supports the [chakra-ui/props-shorthand](https://github.com/Monchi/eslint-plugin-chakra-ui/blob/master/docs/rules/props-shorthand.md) rule.
 
-This repository includes:
-
-- TypeScript setting
-- Jest
-- GitHub actions configuration
 
 ## LICENSE
 
