@@ -18,9 +18,9 @@ I recommend you to try his one too.
 
 It has two advantages over mine, which are parser and other rules.
 
-Its default parser is @typescript/parser. Though it has an overhead in execution speed, but it can reduce false positives with its complex flow analysis.
+- Analysis using type information: Though it has an overhead in execution speed, but it can reduce false positives with flow analysis.
 
-Also, it supports the [chakra-ui/props-shorthand](https://github.com/Monchi/eslint-plugin-chakra-ui/blob/master/docs/rules/props-shorthand.md) rule.
+- Other rules: It offers [chakra-ui/props-shorthand](https://github.com/Monchi/eslint-plugin-chakra-ui/blob/master/docs/rules/props-shorthand.md) rule.
 
 
 ## LICENSE
