@@ -1,5 +1,9 @@
 # ESLint plugin of Chakra UI
 
+Please use [Monchi/eslint-plugin-chakra-ui](https://github.com/Monchi/eslint-plugin-chakra-ui)!
+
+My library no longer has any advantages, because I have substantially rewritten the sorting logic of Monchi's library.
+
 ## What's this?
 
 Rules enforcing best practices and consistency using [Chakra UI](https://chakra-ui.com/).
